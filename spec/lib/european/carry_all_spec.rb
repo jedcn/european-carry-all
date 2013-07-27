@@ -44,6 +44,10 @@ module European
 
         end
 
+        it 'instance evals the block associated with the project' do
+          projects['reveal-ck'].some_value.should == 1
+        end
+
       end
 
     end
