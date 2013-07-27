@@ -22,15 +22,23 @@ module European
         CarryAll.load_file file
       end
 
+      let :projects do
+        carry_all.projects
+      end
+
+      let :reveal_ck do
+        projects['reveal-ck']
+      end
+
+      let :travis do
+        carry_all.build_systems['travis']
+      end
+
       let :known_project_names do
         ['reveal-ck', 'reveal-ck-template', 'rake-to-web', 'emacs-setup']
       end
 
       describe '#projects' do
-
-        let :projects do
-          carry_all.projects
-        end
 
         it 'returns a map of European::Projects in the CarryAll' do
 
@@ -44,23 +52,16 @@ module European
 
         end
 
-        let :reveal_ck do
-          projects['reveal-ck']
-        end
-
-        let :travis do
-          carry_all.build_systems['travis']
-        end
-
         it 'instance evals the block associated with the project' do
           reveal_ck.some_value.should == 1
         end
 
-        it 'knits projects and builds together' do
-          expect(reveal_ck.build_system).to eq travis
-          expect(travis.projects.keys).to include reveal_ck.name
-        end
+      end
 
+      it 'knits projects and builds together' do
+        expect(reveal_ck.build_system).to eq travis
+        expect(travis.projects.keys).to include reveal_ck.name
+        expect(reveal_ck.build.url).to eq 'https://travis-ci.org/jedcn/reveal-ck'
       end
 
     end

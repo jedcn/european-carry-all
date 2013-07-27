@@ -10,6 +10,9 @@ module European
     end
 
     def setup
+      build_systems.values.each do |build_system|
+        build_system.setup
+      end
       projects.values.each do |project|
         project.setup
       end
