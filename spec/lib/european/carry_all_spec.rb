@@ -44,8 +44,21 @@ module European
 
         end
 
+        let :reveal_ck do
+          projects['reveal-ck']
+        end
+
+        let :travis do
+          carry_all.build_systems['travis']
+        end
+
         it 'instance evals the block associated with the project' do
-          projects['reveal-ck'].some_value.should == 1
+          reveal_ck.some_value.should == 1
+        end
+
+        it 'knits projects and builds together' do
+          expect(reveal_ck.build_system).to eq travis
+          expect(travis.projects.keys).to include reveal_ck.name
         end
 
       end
