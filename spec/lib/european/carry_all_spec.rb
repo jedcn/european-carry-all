@@ -42,9 +42,7 @@ module European
 
         it 'returns a map of European::Projects in the CarryAll' do
 
-          expect(projects.keys).to eq known_project_names
-
-          expect(carry_all.projects.size).to eq 4
+          expect(projects.keys).to match_array known_project_names
 
           carry_all.projects.values.each do |project|
             expect(project.class).to eq European::Project

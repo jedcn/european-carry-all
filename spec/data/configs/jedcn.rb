@@ -15,6 +15,11 @@ project 'reveal-ck' do
 
 end
 
+project 'rake-to-web' do
+  builds_in 'travis'
+  has_build 'travis/reveal-ck'
+end
+
 project 'reveal-ck-template'
-project 'rake-to-web'
+
 project 'emacs-setup'
