@@ -20,4 +20,11 @@ guard :rspec, cli: '--color --format nested' do
     'spec'
   end
 
+  watch('^spec/data/(.+)$') do |m|
+    changed_data_file = m[0]
+    puts "#{changed_data_file} has changed. Running all specs."
+    puts "Running something like 'rspec spec'."
+    'spec'
+  end
+
 end
