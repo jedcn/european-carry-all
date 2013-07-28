@@ -31,7 +31,7 @@ module European
       end
 
       let :travis do
-        carry_all.build_systems['travis']
+        carry_all.build_systems['travis/jedcn']
       end
 
       let :known_project_names do
