@@ -6,11 +6,11 @@ module European
 
     def initialize(args)
       @name = args[:name] || raise(':name is required')
-      @block = args[:block]
+      @proc = args[:proc]
     end
 
     def setup
-      instance_eval &@block if @block
+      instance_eval &@proc if @proc
     end
 
   end

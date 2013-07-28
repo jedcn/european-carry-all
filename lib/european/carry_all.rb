@@ -49,11 +49,11 @@ module European
       carry_all = CarryAll.new
       lambda {
         Kernel.send :define_method, :project do |name, &block|
-          carry_all.add_project(European::Project.new({name: name, block: block, carry_all: carry_all}))
+          carry_all.add_project(European::Project.new({name: name, proc: block, carry_all: carry_all}))
         end
 
         Kernel.send :define_method, :build_system do |name, &block|
-          carry_all.add_build_system(European::BuildSystem.new({name: name, block: block, carry_all: carry_all}))
+          carry_all.add_build_system(European::BuildSystem.new({name: name, proc: block, carry_all: carry_all}))
         end
       }.call
       load file
