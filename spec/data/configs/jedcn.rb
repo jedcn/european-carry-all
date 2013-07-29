@@ -1,5 +1,6 @@
 build_system 'travis/jedcn' do
   url_is 'https://travis-ci.org/jedcn'
+  builds_at '"#{url}/#{name}/"'
 end
 
 project 'reveal-ck' do

@@ -36,8 +36,11 @@ module European
           build_system.add_project project
         elsif action == :has_build
           build_system = project.build_system
-          raise "#{build_system} already has a build named #{name}'" if build_system.builds[name]
-          build = Build.new build_system: build_system, project: project, name: name
+          if build_system.builds[name]
+            raise "#{build_system} already has a build named #{name}'"
+          end
+          url = build_system.url_for_build_named name
+          build = Build.new build_system: build_system, project: project, name: name, url: url
           build_system.add_build build
           project.add_build build
         end
