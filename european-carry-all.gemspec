@@ -13,7 +13,8 @@ Gem::Specification.new do |s|
   s.description = %q{A scheme for describing project portfolios. It's not a purse, and I'm not a cat lady!}
 
   s.add_development_dependency 'rspec'
-  s.add_development_dependency "guard-rspec"
+  s.add_development_dependency 'guard-rspec'
+  s.add_development_dependency 'rake'
 
   s.rubyforge_project = "european-carry-all"
 
