@@ -1,23 +1,15 @@
-
 build_system 'travis/jedcn' do
   url_is 'https://travis-ci.org/jedcn'
 end
 
 project 'reveal-ck' do
-
   builds_in 'travis/jedcn'
   has_build 'reveal-ck'
-
-  @some_value = 1
-  def some_value
-    @some_value
-  end
-
 end
 
 project 'rake-to-web' do
   builds_in 'travis/jedcn'
-  has_build 'reveal-ck'
+  has_build 'rake-to-web'
 end
 
 project 'reveal-ck-template'

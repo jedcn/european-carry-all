@@ -50,16 +50,28 @@ module European
 
         end
 
-        it 'instance evals the block associated with the project' do
-          reveal_ck.some_value.should == 1
-        end
-
       end
 
-      it 'knits projects and builds together' do
+      it 'knits projects, build systems, and builds together' do
+        # reveal_ck's build system has been set to travis
         expect(reveal_ck.build_system).to eq travis
-        expect(travis.projects.keys).to include reveal_ck.name
-        expect(reveal_ck.build.url).to eq 'https://travis-ci.org/jedcn/reveal-ck'
+
+        # travis has been told of reveal_ck
+        expect(travis.projects.values).to include reveal_ck
+
+        # reveal_ck has a single build
+        reveal_ck_build = reveal_ck.builds['reveal-ck']
+        expect(reveal_ck.builds.size).to eq 1
+
+        # The build's name has been set
+        expect(reveal_ck_build.name).to eq 'reveal-ck'
+        # The build is aware of the project that it belongs to
+        expect(reveal_ck_build.project).to eq reveal_ck
+        # The build is aware of the build system that it belongs to
+        expect(reveal_ck_build.build_system).to eq travis
+
+        # travis knows about the build
+        expect(travis.builds['reveal-ck']).to eq reveal_ck_build
       end
 
     end

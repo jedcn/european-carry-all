@@ -31,8 +31,15 @@ module European
         project = item
         if action == :builds_in
           build_system = @build_systems[name]
+          raise "Unknown BuildSystem '#{name}'" unless build_system
           project.build_system = build_system
           build_system.add_project project
+        elsif action == :has_build
+          build_system = project.build_system
+          raise "#{build_system} already has a build named #{name}'" if build_system.builds[name]
+          build = Build.new build_system: build_system, project: project, name: name
+          build_system.add_build build
+          project.add_build build
         end
       end
     end

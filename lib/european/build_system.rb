@@ -17,17 +17,16 @@ module European
     end
 
     def add_project(project)
-      @projects[project.name] = project
+      projects[project.name] = project
     end
 
-    def register_build(project, name)
-      raise 'Unknown project' unless @projects[project.name]
-      build = Build.new build_system: self, name: name, url: "#{url}/#{name}"
-      builds[project.name] ||= []
-      builds[project.name] << build
-      build
+    def add_build(build)
+      builds[build.name] = build
     end
 
+    def to_s
+      "BuildSystem '#{name}'"
+    end
   end
 
 end

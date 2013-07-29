@@ -5,10 +5,11 @@ module European
 
     attr_accessor :build_system
 
-    attr_accessor :build
+    attr_accessor :builds
 
     def initialize(args)
       @carry_all = args[:carry_all] || raise(':carry_all is required')
+      @builds = {}
       super args
     end
 
@@ -17,8 +18,11 @@ module European
     end
 
     def has_build(name)
-      @build = build_system.register_build self, name
+      carry_all.register self, :has_build, name
     end
 
+    def add_build(build)
+      builds[build.name] = build
+    end
   end
 end

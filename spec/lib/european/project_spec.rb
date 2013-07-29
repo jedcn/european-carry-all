@@ -39,5 +39,26 @@ module European
 
     end
 
+    describe '#has_build' do
+
+      let :carry_all do
+        double 'carry_all'
+      end
+
+      let :name_of_build do
+        'name_of_build'
+      end
+
+      let :project do
+        Project.new({ name: name_of_project, carry_all: carry_all })
+      end
+
+      it 'registers the referenced build with the carry_all' do
+        carry_all.should_receive(:register).with(project, :has_build, name_of_build)
+        project.has_build name_of_build
+      end
+
+    end
+
   end
 end
