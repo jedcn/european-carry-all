@@ -1,3 +1,8 @@
+PATH
+  remote: .
+  specs:
+    european-carry-all (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -44,5 +49,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  european-carry-all!
   guard-rspec
   rspec
