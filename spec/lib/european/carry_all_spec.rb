@@ -52,7 +52,7 @@ module European
 
       end
 
-      it 'knits projects, build systems, and builds together' do
+      it 'knits projects, source systems, build systems, and builds together' do
         # reveal_ck's build system has been set to travis
         expect(reveal_ck.build_system).to eq travis
 
@@ -72,6 +72,7 @@ module European
 
         # travis knows about the build
         expect(travis.builds['reveal-ck']).to eq reveal_ck_build
+        expect(reveal_ck.src_url).to eq 'https://github.com/jedcn/reveal-ck.git'
       end
 
     end

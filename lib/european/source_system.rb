@@ -1,24 +1,23 @@
 module European
 
-  class BuildSystem < NamedCarryAllItem
+  class SourceSystem < NamedCarryAllItem
 
-    attr_reader :projects, :builds
+    attr_reader :projects
 
-    attr_reader :url, :project_path
+    attr_reader :project_path
 
     def initialize(args)
       super args
       @projects = {}
-      @builds = {}
     end
 
     def to_s
-      "BuildSystem '#{name}'"
+      "SourceSystem '#{name}'"
     end
 
     #
     # Methods invoked by CarryAll
-    def url_for_project_named(name)
+    def src_url_for_project_named(name)
       eval project_path
     end
 
@@ -26,16 +25,8 @@ module European
       projects[project.name] = project
     end
 
-    def add_build(build)
-      builds[build.name] = build
-    end
-
     #
     # DSL
-    def url_is(url)
-      @url = url
-    end
-
     def hosts_projects_at(project_path)
       @project_path = project_path
     end

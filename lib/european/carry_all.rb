@@ -2,20 +2,18 @@ module European
 
   class CarryAll
 
-    attr_reader :projects, :build_systems
+    attr_reader :projects, :build_systems, :source_systems
 
     def initialize
       @projects = {}
       @build_systems = {}
+      @source_systems = {}
     end
 
     def setup
-      build_systems.values.each do |build_system|
-        build_system.setup
-      end
-      projects.values.each do |project|
-        project.setup
-      end
+      source_systems.values.each { |system| system.setup }
+      build_systems.values.each { |system| system.setup }
+      projects.values.each { |project| project.setup }
     end
 
     def add_project(project)
@@ -24,6 +22,10 @@ module European
 
     def add_build_system(build_system)
       build_systems[build_system.name] = build_system
+    end
+
+    def add_source_system(source_system)
+      source_systems[source_system.name] = source_system
     end
 
     def register(item, action, name)
@@ -39,10 +41,17 @@ module European
           if build_system.builds[name]
             raise "#{build_system} already has a build named #{name}'"
           end
-          url = build_system.url_for_build_named name
+          url = build_system.url_for_project_named name
           build = Build.new build_system: build_system, project: project, name: name, url: url
           build_system.add_build build
           project.add_build build
+        elsif action == :is_hosted_on
+          source_system = @source_systems[name]
+          raise "Unknown SourceSystem '#{name}'" unless source_system
+          project.source_system = source_system
+          source_system.add_project project
+          url = source_system.src_url_for_project_named project.name
+          project.src_url = url
         end
       end
     end
@@ -64,6 +73,10 @@ module European
 
         Kernel.send :define_method, :build_system do |name, &block|
           carry_all.add_build_system(European::BuildSystem.new({name: name, proc: block, carry_all: carry_all}))
+        end
+
+        Kernel.send :define_method, :source_system do |name, &block|
+          carry_all.add_source_system(European::SourceSystem.new({name: name, proc: block, carry_all: carry_all}))
         end
       }.call
       load file
