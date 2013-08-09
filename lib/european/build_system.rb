@@ -12,10 +12,6 @@ module European
       @builds = {}
     end
 
-    def to_s
-      "BuildSystem '#{name}'"
-    end
-
     #
     # Methods invoked by CarryAll
     def url_for_project_named(name)
