@@ -12,27 +12,30 @@ describe 'EuropeanCarryAll DSL' do
       carry_all.projects
     end
 
-    context 'with a single, simple project' do
+    describe 'project (without a block)' do
 
       let :file do
-        File.join Dir.pwd, 'spec', 'data', 'configs', 'project-simple.rb'
+        File.join Dir.pwd, 'spec', 'data', 'configs', 'project.rb'
       end
 
-      it 'knows how many projects are created' do
+      it 'brings a project into existence' do
         projects.size.should == 1
-      end
-
-      it 'enables projects to be found by name' do
         reveal_ck = carry_all.projects['reveal-ck']
         reveal_ck.name.should == 'reveal-ck'
       end
 
     end
 
-    context 'with a single project that has a block' do
+    describe 'project (with a block)' do
 
       let :file do
-        File.join Dir.pwd, 'spec', 'data', 'configs', 'project-block.rb'
+        File.join Dir.pwd, 'spec', 'data', 'configs', 'project-with-block.rb'
+      end
+
+      it 'brings a project into existence' do
+        projects.size.should == 1
+        reveal_ck = carry_all.projects['reveal-ck']
+        reveal_ck.name.should == 'reveal-ck'
       end
 
       it 'instance evals the associated block' do
