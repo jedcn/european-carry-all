@@ -15,11 +15,13 @@ module European
       build_systems.values.each { |system| system.setup }
       default_project = projects['defaults']
       default_project.setup if default_project
+      projects.delete 'defaults'
       projects.values.each do |project|
         next if project == default_project
         project.exec default_project.proc if default_project
         project.setup
       end
+
     end
 
     def add_project(project)
