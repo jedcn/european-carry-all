@@ -8,6 +8,7 @@ module European
       @projects = {}
       @build_systems = {}
       @source_systems = {}
+      @post_setup_procs = []
     end
 
     def setup
@@ -21,7 +22,9 @@ module European
         project.exec default_project.proc if default_project
         project.setup
       end
-
+      @post_setup_procs.each do |proc|
+        instance_eval &proc
+      end
     end
 
     def add_project(project)
@@ -34,6 +37,10 @@ module European
 
     def add_source_system(source_system)
       source_systems[source_system.name] = source_system
+    end
+
+    def after_setup(&block)
+      @post_setup_procs << block
     end
 
     def register(item, action, name)
@@ -77,6 +84,20 @@ module European
       lambda {
         Kernel.send :define_method, :project do |name, &block|
           carry_all.add_project(European::Project.new({name: name, proc: block, carry_all: carry_all}))
+        end
+
+        Kernel.send :define_method, :build do |name|
+          carry_all.after_setup do
+            build_system_name = name[0..name.index('/')-1]
+            build_name = name[name.index('/')+1..-1]
+            build_system = build_systems[build_system_name]
+            if build_system.builds[name]
+              raise "#{build_system} already has a build named #{name}'"
+            end
+            url = build_system.url_for_project_named build_name
+            build = Build.new build_system: build_system, project: nil, name: build_name, url: url
+            build_system.add_build build
+          end
         end
 
         Kernel.send :define_method, :build_system do |name, &block|
