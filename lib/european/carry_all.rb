@@ -2,8 +2,6 @@ module European
 
   class CarryAll
 
-    attr_reader :projects, :build_systems, :source_systems
-
     def initialize
       @projects = {}
       @build_systems = {}
@@ -12,12 +10,12 @@ module European
     end
 
     def setup
-      source_systems.values.each { |system| system.setup }
-      build_systems.values.each { |system| system.setup }
-      default_project = projects['defaults']
+      @source_systems.values.each { |system| system.setup }
+      @build_systems.values.each { |system| system.setup }
+      default_project = @projects['defaults']
       default_project.setup if default_project
-      projects.delete 'defaults'
-      projects.values.each do |project|
+      @projects.delete 'defaults'
+      @projects.values.each do |project|
         next if project == default_project
         project.exec default_project.proc if default_project
         project.setup
@@ -28,19 +26,49 @@ module European
     end
 
     def add_project(project)
-      projects[project.name] = project
+      @projects[project.name] = project
     end
 
     def add_build_system(build_system)
-      build_systems[build_system.name] = build_system
+      @build_systems[build_system.name] = build_system
     end
 
     def add_source_system(source_system)
-      source_systems[source_system.name] = source_system
+      @source_systems[source_system.name] = source_system
     end
 
     def after_setup(&block)
       @post_setup_procs << block
+    end
+
+    # TODO: Ack! This is shadowing the kernel defined 'project' from
+    # the DSL portion in load_file. Is there anyway to avoid globally
+    # defining 'project'?
+    def project(args)
+      named = args[:named] || raise(':named is required')
+      @projects[named]
+    end
+
+    def projects
+      @projects.values
+    end
+
+    def build_system(args)
+      named = args[:named] || raise(':named is required')
+      @build_systems[named]
+    end
+
+    def build_systems
+      @build_systems.values
+    end
+
+    def source_system(args)
+      named = args[:named] || raise(':named is required')
+      @source_systems[named]
+    end
+
+    def source_systems
+      @source_systems.values
     end
 
     def register(item, action, name)
@@ -53,7 +81,7 @@ module European
           build_system.add_project project
         elsif action == :has_build
           build_system = project.build_system
-          if build_system.builds[name]
+          if build_system.build named: name
             raise "#{build_system} already has a build named #{name}'"
           end
           url = build_system.url_for_project_named name
@@ -82,6 +110,8 @@ module European
     def self.load_file(file)
       carry_all = CarryAll.new
       lambda {
+        # TODO: Is there any way to define this.. just on an object..
+        # and have that DSL file be loaded in the context of that object?
         Kernel.send :define_method, :project do |name, &block|
           carry_all.add_project(European::Project.new({name: name, proc: block, carry_all: carry_all}))
         end
@@ -90,8 +120,8 @@ module European
           carry_all.after_setup do
             build_system_name = name[0..name.index('/')-1]
             build_name = name[name.index('/')+1..-1]
-            build_system = build_systems[build_system_name]
-            if build_system.builds[name]
+            build_system = @build_systems[build_system_name]
+            if build_system.build named: name
               raise "#{build_system} already has a build named #{name}'"
             end
             url = build_system.url_for_project_named build_name

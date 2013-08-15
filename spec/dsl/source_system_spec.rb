@@ -13,7 +13,7 @@ describe 'EuropeanCarryAll DSL' do
     end
 
     let :github_jedcn do
-      source_systems['github/jedcn']
+      carry_all.source_system named: 'github/jedcn'
     end
 
     describe 'source_system (without a block)' do

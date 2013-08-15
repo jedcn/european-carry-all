@@ -17,11 +17,11 @@ describe 'EuropeanCarryAll DSL' do
     end
 
     let :reveal_ck do
-      projects['reveal-ck']
+      carry_all.project named: 'reveal-ck'
     end
 
     let :travis do
-      carry_all.build_systems['travis/jedcn']
+      carry_all.build_system named: 'travis/jedcn'
     end
 
     describe 'enables all projects to share default settings' do
@@ -32,7 +32,7 @@ describe 'EuropeanCarryAll DSL' do
         expect(reveal_ck.build_system).to eq travis
 
         # travis/jedcn has been told of reveal_ck
-        expect(travis.projects.values).to include reveal_ck
+        expect(travis.projects).to include reveal_ck
 
         # reveal_ck has a single build
         reveal_ck_build = reveal_ck.builds['reveal-ck']
@@ -48,7 +48,7 @@ describe 'EuropeanCarryAll DSL' do
         expect(reveal_ck_build.build_system).to eq travis
 
         # travis knows about the build
-        expect(travis.builds['reveal-ck']).to eq reveal_ck_build
+        expect(travis.build named: 'reveal-ck').to eq reveal_ck_build
       end
 
       it 'supports "is_hosted_on"' do

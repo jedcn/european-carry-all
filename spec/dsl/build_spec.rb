@@ -9,11 +9,11 @@ describe 'EuropeanCarryAll DSL' do
     end
 
     let :travis do
-      carry_all.build_systems['travis']
+      carry_all.build_system named: 'travis'
     end
 
     let :reveal_ck do
-      travis.builds['jedcn/reveal-ck']
+      travis.build named: 'jedcn/reveal-ck'
     end
 
     describe 'build (without a block)' do

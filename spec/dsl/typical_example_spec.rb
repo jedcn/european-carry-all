@@ -21,11 +21,11 @@ describe 'EuropeanCarryAll DSL' do
     end
 
     let :travis do
-        build_systems['travis/jedcn']
+      carry_all.build_system named: 'travis/jedcn'
     end
 
     let :github do
-        source_systems['github/jedcn']
+      carry_all.source_system named: 'github/jedcn'
     end
 
     let :projects do
@@ -39,7 +39,8 @@ describe 'EuropeanCarryAll DSL' do
       end
 
       it 'includes every declared project' do
-        projects.keys.should =~ known_project_names
+        project_names = projects.collect {|project| project.name}
+        project_names.should =~ known_project_names
       end
 
     end
@@ -51,7 +52,8 @@ describe 'EuropeanCarryAll DSL' do
       end
 
       it 'includes every declared build_system' do
-        build_systems.keys.should =~ known_build_systems
+        build_system_names = build_systems.collect {|build_system| build_system.name}
+        build_system_names.should =~ known_build_systems
       end
 
     end
@@ -63,7 +65,7 @@ describe 'EuropeanCarryAll DSL' do
       end
 
       it 'includes every declared source_system' do
-        source_systems.keys.should =~ known_source_systems
+        source_systems.collect { |source_system| source_system.name }.should =~ known_source_systems
       end
 
     end
@@ -72,13 +74,13 @@ describe 'EuropeanCarryAll DSL' do
 
       it 'knits projects, source systems, build systems, and builds together' do
 
-        reveal_ck = projects['reveal-ck']
+        reveal_ck = carry_all.project named: 'reveal-ck'
 
         # The project's build_system has been set
         reveal_ck.build_system.should == travis
 
         # The build_system is aware of the project
-        travis.projects.values.should include reveal_ck
+        travis.projects.should include reveal_ck
 
         reveal_ck_build = reveal_ck.builds.values.first
 
@@ -92,7 +94,7 @@ describe 'EuropeanCarryAll DSL' do
         reveal_ck_build.build_system.should == travis
 
         # travis knows about the build
-        travis.builds['reveal-ck'].should == reveal_ck_build
+        travis.build(named: 'reveal-ck').should == reveal_ck_build
 
         # reveal_ck knows about its source system
         reveal_ck.source_system.should == github

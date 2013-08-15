@@ -20,7 +20,7 @@ describe 'EuropeanCarryAll DSL' do
 
       it 'brings a project into existence' do
         projects.size.should == 1
-        reveal_ck = carry_all.projects['reveal-ck']
+        reveal_ck = carry_all.project named: 'reveal-ck'
         reveal_ck.name.should == 'reveal-ck'
       end
 
@@ -34,12 +34,12 @@ describe 'EuropeanCarryAll DSL' do
 
       it 'brings a project into existence' do
         projects.size.should == 1
-        reveal_ck = carry_all.projects['reveal-ck']
+        reveal_ck = carry_all.project named: 'reveal-ck'
         reveal_ck.name.should == 'reveal-ck'
       end
 
       it 'instance evals the associated block' do
-        reveal_ck = carry_all.projects['reveal-ck']
+        reveal_ck = carry_all.project named: 'reveal-ck'
         reveal_ck.example.should == 1
       end
 

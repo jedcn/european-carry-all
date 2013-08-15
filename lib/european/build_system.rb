@@ -2,8 +2,6 @@ module European
 
   class BuildSystem < NamedCarryAllItem
 
-    attr_reader :projects, :builds
-
     attr_reader :url, :project_path
 
     def initialize(args)
@@ -19,11 +17,29 @@ module European
     end
 
     def add_project(project)
-      projects[project.name] = project
+      @projects[project.name] = project
     end
 
     def add_build(build)
-      builds[build.name] = build
+      @builds[build.name] = build
+    end
+
+    def projects()
+      @projects.values
+    end
+
+    def project(args)
+      named = args[:named] || raise('named is required')
+      @projects[named]
+    end
+
+    def builds
+      @builds.values
+    end
+
+    def build(args)
+      named = args[:named] || raise('named is required')
+      @builds[named]
     end
 
     #
