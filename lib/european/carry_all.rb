@@ -5,6 +5,7 @@ module European
     def initialize
       @projects = {}
       @build_systems = {}
+      @deploy_systems = {}
       @source_systems = {}
       @post_setup_procs = []
     end
@@ -12,6 +13,7 @@ module European
     def setup
       @source_systems.values.each { |system| system.setup }
       @build_systems.values.each { |system| system.setup }
+      @deploy_systems.values.each { |system| system.setup }
       default_project = @projects['defaults']
       default_project.setup if default_project
       @projects.delete 'defaults'
@@ -31,6 +33,10 @@ module European
 
     def add_build_system(build_system)
       @build_systems[build_system.name] = build_system
+    end
+
+    def add_deploy_system(deploy_system)
+      @deploy_systems[deploy_system.name] = deploy_system
     end
 
     def add_source_system(source_system)
@@ -60,6 +66,15 @@ module European
 
     def build_systems
       @build_systems.values
+    end
+
+    def deploy_system(args)
+      named = args[:named] || raise(':named is required')
+      @deploy_systems[named]
+    end
+
+    def deploy_systems
+      @deploy_systems.values
     end
 
     def source_system(args)
@@ -132,6 +147,10 @@ module European
 
         Kernel.send :define_method, :build_system do |name, &block|
           carry_all.add_build_system(European::BuildSystem.new({name: name, proc: block, carry_all: carry_all}))
+        end
+
+        Kernel.send :define_method, :deploy_system do |name, &block|
+          carry_all.add_deploy_system(European::DeploySystem.new({name: name, proc: block, carry_all: carry_all}))
         end
 
         Kernel.send :define_method, :source_system do |name, &block|
