@@ -110,6 +110,23 @@ module European
           source_system.add_project project
           url = source_system.src_url_for_project_named project.name
           project.src_url = url
+        elsif action == :deploys_from
+          deploy_system = @deploy_systems[name]
+          raise "Unknown DeploySystem '#{name}'" unless deploy_system
+          project.deploy_systems << deploy_system
+          deploy_system.add_project project
+        elsif action == :has_deploy
+          ni = NameInterpreter.new name
+          deploy_system_name = ni.prefix
+          build_name = ni.name
+          deploy_system = project.deploy_systems.find { |ds| ds.name == deploy_system_name }
+          if deploy_system.build named: build_name
+            raise "#{deploy_system} already has a deploy named #{build_name}'"
+          end
+          url = deploy_system.url_for_project_named build_name
+          deploy = Build.new build_system: deploy_system, project: project, name: build_name, url: url
+          deploy_system.add_build deploy
+          project.add_deploy deploy
         end
       end
     end
@@ -133,8 +150,9 @@ module European
 
         Kernel.send :define_method, :build do |name|
           carry_all.after_setup do
-            build_system_name = name[0..name.index('/')-1]
-            build_name = name[name.index('/')+1..-1]
+            ni = NameInterpreter.new name
+            build_system_name = ni.prefix
+            build_name = ni.name
             build_system = @build_systems[build_system_name]
             if build_system.build named: name
               raise "#{build_system} already has a build named #{name}'"
