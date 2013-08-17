@@ -89,19 +89,19 @@ module European
     def register(item, action, name)
       if item.class == Project
         project = item
-        if action == :builds_in
-          build_system = @build_systems[name]
-          raise "Unknown BuildSystem '#{name}'" unless build_system
-          project.build_system = build_system
-          build_system.add_project project
-        elsif action == :has_build
-          build_system = project.build_system
-          if build_system.build named: name
-            raise "#{build_system} already has a build named #{name}'"
+        if action == :has_build
+          ni = NameInterpreter.new name
+          build_system_name = ni.prefix
+          build_name = ni.name
+          build_system = build_systems.find { |bs| bs.name == build_system_name }
+          if build_system.build named: build_name
+            raise "#{build_system} already has a build named #{build_name}'"
           end
-          url = build_system.url_for_project_named name
-          build = Build.new build_system: build_system, project: project, name: name, url: url
+          url = build_system.url_for_project_named build_name
+          build = Build.new build_system: build_system, project: project, name: build_name, url: url
           build_system.add_build build
+          build_system.add_project project
+          project.add_build_system build_system
           project.add_build build
         elsif action == :is_hosted_on
           source_system = @source_systems[name]
@@ -119,9 +119,9 @@ module European
           ni = NameInterpreter.new name
           deploy_system_name = ni.prefix
           build_name = ni.name
-          deploy_system = project.deploy_systems.find { |ds| ds.name == deploy_system_name }
+          deploy_system = deploy_systems.find { |ds| ds.name == deploy_system_name }
           if deploy_system.build named: build_name
-            raise "#{deploy_system} already has a deploy named #{build_name}'"
+            raise "#{deploy_system} already has a deploy named '#{build_name}'"
           end
           url = deploy_system.url_for_project_named build_name
           deploy = Build.new build_system: deploy_system, project: project, name: build_name, url: url

@@ -21,7 +21,7 @@ describe 'EuropeanCarryAll DSL' do
     end
 
     let :travis do
-      carry_all.build_system named: 'travis/jedcn'
+      carry_all.build_system named: 'travis-jedcn'
     end
 
     let :github do
@@ -48,7 +48,7 @@ describe 'EuropeanCarryAll DSL' do
     describe 'known build_systems' do
 
       let :known_build_systems do
-        ['travis/jedcn']
+        ['travis-jedcn']
       end
 
       it 'includes every declared build_system' do
@@ -77,7 +77,7 @@ describe 'EuropeanCarryAll DSL' do
         reveal_ck = carry_all.project named: 'reveal-ck'
 
         # The project's build_system has been set
-        reveal_ck.build_system.should == travis
+        reveal_ck.build_systems.first.should == travis
 
         # The build_system is aware of the project
         travis.projects.should include reveal_ck

@@ -3,7 +3,7 @@ module European
 
     attr_reader :carry_all
 
-    attr_accessor :build_system, :source_system, :deploy_systems
+    attr_accessor :build_systems, :source_system, :deploy_systems
 
     attr_accessor :builds, :deploys, :src_url
 
@@ -12,6 +12,7 @@ module European
       @builds = {}
       @deploys = {}
       @deploy_systems = []
+      @build_systems = []
       super args
     end
 
@@ -25,6 +26,10 @@ module European
       builds[build.name] = build
     end
 
+    def add_build_system(build_system)
+      build_systems << build_system
+    end
+
     def has_deploy(name)
       carry_all.register self, :has_deploy, name
     end
@@ -35,10 +40,6 @@ module European
 
     #
     # DSL
-    def builds_in(name)
-      carry_all.register self, :builds_in, name
-    end
-
     def is_hosted_on(name)
       carry_all.register self, :is_hosted_on, name
     end

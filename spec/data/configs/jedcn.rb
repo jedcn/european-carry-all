@@ -2,20 +2,18 @@ source_system 'github' do
   hosts_projects_at '"https://github.com/jedcn/#{name}.git"'
 end
 
-build_system 'travis/jedcn' do
+build_system 'travis-jedcn' do
   url_is 'https://travis-ci.org/jedcn'
   hosts_projects_at '"#{url}/#{name}/"'
 end
 
 project 'reveal-ck' do
-  builds_in 'travis/jedcn'
-  has_build 'reveal-ck'
+  has_build 'travis-jedcn/reveal-ck'
   is_hosted_on 'github'
 end
 
 project 'rake-to-web' do
-  builds_in 'travis/jedcn'
-  has_build 'rake-to-web'
+  has_build 'travis-jedcn/rake-to-web'
   is_hosted_on 'github'
 end
 
