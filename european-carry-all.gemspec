@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email       = ['northridge@gmail.com']
   s.homepage    = 'https://github.com/jedcn/european-carry-all'
   s.summary     = %q{A lightweight DSL for describing a project portfolio}
-  s.description = %q{A scheme for describing project portfolios. It's not a purse, and I'm not a cat lady!}
+  s.description = %q{A scheme for describing project portfolios.}
 
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'guard-rspec'
