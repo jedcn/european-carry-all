@@ -139,6 +139,17 @@ module European
 
   class CarryAll
 
+    require 'tempfile'
+    require 'open-uri'
+
+    def self.load_url(url)
+      file = Tempfile.new 'carry_all'
+      url_content = open(url, ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE).read
+      file.write url_content
+      file.close
+      load_file file.path
+    end
+
     def self.load_file(file)
       carry_all = CarryAll.new
       lambda {
